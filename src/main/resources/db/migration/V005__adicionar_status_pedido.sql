@@ -1,0 +1,3 @@
+ALTER TABLE PEDIDO
+    ADD COLUMN status_pedido VARCHAR(2),
+    ADD COLUMN total DECIMAL;
