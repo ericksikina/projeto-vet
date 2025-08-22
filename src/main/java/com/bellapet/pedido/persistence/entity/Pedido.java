@@ -31,7 +31,7 @@ public class Pedido {
     @Column(name = "status_pedido")
     private StatusPedido statusPedido;
     private BigDecimal total;
-    @OneToOne
+    @OneToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "id_pagamento")
     private Pagamento pagamento;
     @OneToMany(mappedBy = "pedido", cascade = CascadeType.PERSIST)

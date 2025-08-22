@@ -1,6 +1,8 @@
 package com.bellapet.pedido.http.adapter;
 
+import com.bellapet.cliente.http.adapter.ClienteAdapter;
 import com.bellapet.cliente.persistence.entity.Cliente;
+import com.bellapet.pagamento.http.adapter.PagamentoAdapter;
 import com.bellapet.pagamento.persistence.model.Pagamento;
 import com.bellapet.pedido.http.response.PedidoResponse;
 import com.bellapet.pedido.http.response.ResumoPedidoResponse;
@@ -15,7 +17,8 @@ import java.util.stream.Collectors;
 public class PedidoAdapter {
 
     public static PedidoResponse toResponse(Pedido pedido) {
-        return new PedidoResponse(pedido.getId(), pedido.getDataHora(), pedido.getStatusPedido(),
+        return new PedidoResponse(pedido.getId(), pedido.getDataHora(), pedido.getStatusPedido(), pedido.getTotal(),
+                PagamentoAdapter.toResponse(pedido.getPagamento()), ClienteAdapter.toResponse(pedido.getCliente()),
                 ProdutoPedidoAdapter.toResponseList(pedido.getListaDeProdutos()));
     }
 

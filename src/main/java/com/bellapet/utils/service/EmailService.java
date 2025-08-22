@@ -18,12 +18,12 @@ public class EmailService {
         this.mailSender = mailSender;
     }
 
-    public void enviarEmailTexto(String destinatario, String mensagem){
+    public void enviarEmailTexto(String destinatario, String mensagem, String assunto){
         try {
             SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
             simpleMailMessage.setFrom(remetente);
             simpleMailMessage.setTo(destinatario);
-            simpleMailMessage.setSubject("Recuperação de senha - Bellapet");
+            simpleMailMessage.setSubject(assunto);
             simpleMailMessage.setText(mensagem);
             mailSender.send(simpleMailMessage);
         } catch (Exception e){

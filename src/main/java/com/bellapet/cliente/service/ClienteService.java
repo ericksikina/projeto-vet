@@ -71,7 +71,8 @@ public class ClienteService {
             throw new IllegalArgumentException("Nenhum cliente cadastrado com esse email!");
 
         String codigoRecuperacao = this.gerarCodigoRescuperacao();
-        this.emailService.enviarEmailTexto(emailRecuperacaoRequest.email(), this.gerarMensagemEmail(codigoRecuperacao));
+        String assunto = "Atualização do seu pedido - Bellapet";
+        this.emailService.enviarEmailTexto(emailRecuperacaoRequest.email(), this.gerarMensagemEmail(codigoRecuperacao), assunto);
         return new EsqueciMinhaSenhaResponse(codigoRecuperacao);
     }
 

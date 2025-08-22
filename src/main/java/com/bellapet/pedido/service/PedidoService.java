@@ -18,12 +18,15 @@ import com.bellapet.produto.persistence.entity.Produto;
 import com.bellapet.produto.service.ProdutoService;
 import com.bellapet.produtoCarrinho.persistence.entity.ProdutoCarrinho;
 import com.bellapet.produtoPedido.persistence.entity.ProdutoPedido;
+import com.bellapet.produtoPedido.persistence.repository.ProdutoPedidoRepository;
 import com.bellapet.utils.service.EmailService;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
 import java.util.List;
 
 @Service
@@ -34,6 +37,7 @@ public class PedidoService {
     private final ClienteService clienteService;
     private final ProdutoService produtoService;
     private final EmailService emailService;
+    private final ProdutoPedidoRepository produtoPedidoRepository;
 
     public List<ResumoPedidoResponse> listarPedidos(HttpServletRequest httpServletRequest) {
         Cliente cliente = this.clienteService.buscarPorAuth(httpServletRequest);
@@ -63,7 +67,8 @@ public class PedidoService {
         this.pedidoRepository.save(pedido);
 
         String mensagem = "Seu pedido " + pedido.getStatusPedido().getDescricao();
-        this.emailService.enviarEmailTexto(pedido.getCliente().getEmail(), mensagem);
+        String assunto = "Atualização do seu pedido - Bellapet";
+        this.emailService.enviarEmailTexto(pedido.getCliente().getEmail(), mensagem, assunto);
     }
 
     @Transactional
@@ -74,7 +79,8 @@ public class PedidoService {
 
         pedido.setStatusPedido(statusPedidoRequest.status());
         String mensagem = "Seu pedido " + statusPedidoRequest.status().getDescricao();
-        this.emailService.enviarEmailTexto(pedido.getCliente().getEmail(), mensagem);
+        String assunto = "Atualização do seu pedido - Bellapet";
+        this.emailService.enviarEmailTexto(pedido.getCliente().getEmail(), mensagem, assunto);
         this.pedidoRepository.save(pedido);
     }
 
@@ -85,21 +91,37 @@ public class PedidoService {
 
     private void podeSerCancelado(StatusPedido statusPedido) {
         if (!statusPedido.equals(StatusPedido.REALIZADO)) {
-            throw new IllegalArgumentException("O pedido não pode ser cancelado");
+            throw new IllegalArgumentException("O pedido não pode ser cancelado pois já " + statusPedido.getDescricao() + "!");
         }
     }
 
     private void adicionarListaDePedidos(List<ProdutoCarrinho> listaDeProdutoCarrinho, Pedido pedido) {
+        if(listaDeProdutoCarrinho.isEmpty()) {
+            throw new IllegalArgumentException("Não há nenhum produto no carrinho!");
+        }
+
         List<ProdutoPedido> listaDeProdutoPedido = listaDeProdutoCarrinho.stream()
                 .map(produtoCarrinho -> {
                     this.verificarEstoqueDisponivel(produtoCarrinho.getProduto(), produtoCarrinho.getQtde());
                     this.produtoService.reduzirQtdeEstoque(produtoCarrinho.getProduto(), produtoCarrinho.getQtde());
-                    return new ProdutoPedido(produtoCarrinho.getQtde(), produtoCarrinho.getProduto(), pedido);
+                    ProdutoPedido produtoPedido = new ProdutoPedido(produtoCarrinho.getQtde(), produtoCarrinho.getProduto(), pedido);
+                    return this.produtoPedidoRepository.save(produtoPedido);
                 })
                 .toList();
 
         pedido.getListaDeProdutos().addAll(listaDeProdutoPedido);
+        pedido.setTotal(this.calcularTotal(pedido.getListaDeProdutos()));
         this.pedidoRepository.save(pedido);
+    }
+
+    private BigDecimal calcularTotal(List<ProdutoPedido> listaProdutoPedido) {
+        BigDecimal total = BigDecimal.ZERO;
+        for (ProdutoPedido produtoPedido : listaProdutoPedido) {
+            BigDecimal preco = produtoPedido.getProduto().getPreco();
+            int quantidade = produtoPedido.getQtde();
+            total = total.add(preco.multiply(BigDecimal.valueOf(quantidade)));
+        }
+        return total;
     }
 
     private void verificarEstoqueDisponivel(Produto produto, int qtde) {
