@@ -19,7 +19,11 @@ public class ServicoService {
     private final ServicoRepository servicoRepository;
 
     public List<ServicoResponse> listarServico() {
-        return ServicoAdapter.toResponseList(this.servicoRepository.findAll());
+        return ServicoAdapter.toResponseList(this.servicoRepository.findAllByStatus(Status.ATIVO));
+    }
+
+    public List<ServicoResponse> listarServicoInativo() {
+        return ServicoAdapter.toResponseList(this.servicoRepository.findAllByStatus(Status.INATIVO));
     }
 
     @Transactional
