@@ -19,7 +19,11 @@ public class TipoProdutoService {
     private final TipoProdutoRepository tipoProdutoRepository;
 
     public List<TipoProdutoResponse> listarTipoProduto() {
-        return TipoProdutoAdapter.toResponseList(this.tipoProdutoRepository.findAll());
+        return TipoProdutoAdapter.toResponseList(this.tipoProdutoRepository.findAllByStatus(Status.ATIVO));
+    }
+
+    public List<TipoProdutoResponse> listarTipoProdutoInativo() {
+        return TipoProdutoAdapter.toResponseList(this.tipoProdutoRepository.findAllByStatus(Status.INATIVO));
     }
 
     @Transactional

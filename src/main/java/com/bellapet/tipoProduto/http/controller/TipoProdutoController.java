@@ -14,13 +14,18 @@ import java.util.List;
 @RestController
 @AllArgsConstructor
 @Tag(name = "Tipo produto")
-@RequestMapping(path = "tipo-produto")
+@RequestMapping(path = "/tipo-produto")
 public class TipoProdutoController {
     private final TipoProdutoService tipoProdutoService;
 
     @GetMapping(path = "/listar")
     public ResponseEntity<List<TipoProdutoResponse>> listarTipoProduto(){
         return ResponseEntity.ok(this.tipoProdutoService.listarTipoProduto());
+    }
+
+    @GetMapping(path = "/listar-inativo")
+    public ResponseEntity<List<TipoProdutoResponse>> listarTipoProdutoInativo(){
+        return ResponseEntity.ok(this.tipoProdutoService.listarTipoProdutoInativo());
     }
 
     @PostMapping(path = "/cadastrar")
