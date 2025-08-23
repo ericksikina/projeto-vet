@@ -25,7 +25,12 @@ public class AnimalService {
 
     public List<AnimalResponse> listarAnimal(HttpServletRequest httpServletRequest){
         Cliente cliente = this.clienteService.buscarPorAuth(httpServletRequest);
-        return AnimalAdapter.toResponseList(this.animalRepository.findAllByCliente(cliente));
+        return AnimalAdapter.toResponseList(this.animalRepository.findAllByClienteAndStatus(cliente,Status.ATIVO));
+    };
+
+    public List<AnimalResponse> listarAnimalInativo(HttpServletRequest httpServletRequest){
+        Cliente cliente = this.clienteService.buscarPorAuth(httpServletRequest);
+        return AnimalAdapter.toResponseList(this.animalRepository.findAllByClienteAndStatus(cliente,Status.INATIVO));
     };
 
     @Transactional

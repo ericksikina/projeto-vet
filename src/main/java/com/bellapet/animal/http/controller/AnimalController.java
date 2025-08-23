@@ -24,6 +24,11 @@ public class AnimalController {
         return ResponseEntity.ok(this.animalService.listarAnimal(httpServletRequest));
     };
 
+    @GetMapping(path = "/listar-inativo")
+    public ResponseEntity<List<AnimalResponse>> listarAnimalInativo(HttpServletRequest httpServletRequest){
+        return ResponseEntity.ok(this.animalService.listarAnimalInativo(httpServletRequest));
+    };
+
     @PostMapping(path = "/cadsatrar")
     public ResponseEntity<Void> cadastrarAnimal(@RequestBody AnimalRequest animalRequest,
                                                 HttpServletRequest httpServletRequest){
