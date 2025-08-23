@@ -58,7 +58,7 @@ public class AnimalService {
     }
 
     private void animalPertenceAoCliente(Animal animal, Cliente cliente) {
-        if(Objects.equals(animal.getCliente(), cliente)){
+        if(!Objects.equals(animal.getCliente(), cliente)){
             throw new IllegalArgumentException("O animal + " + animal.getNome() + " não pertence a você!");
         }
     }
