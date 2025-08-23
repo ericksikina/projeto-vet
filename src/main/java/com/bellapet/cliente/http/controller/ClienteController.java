@@ -6,6 +6,7 @@ import com.bellapet.cliente.http.request.EmailRecuperacaoRequest;
 import com.bellapet.cliente.http.request.EsqueciMinhaSenhaRequest;
 import com.bellapet.cliente.http.response.ClienteResponse;
 import com.bellapet.cliente.http.response.EsqueciMinhaSenhaResponse;
+import com.bellapet.cliente.http.response.ResumoClienteResponse;
 import com.bellapet.cliente.service.ClienteService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
@@ -24,13 +25,18 @@ public class ClienteController {
     private final ClienteService clienteService;
 
     @GetMapping(path = "/listar")
-    public ResponseEntity<List<ClienteResponse>> listarCliente(){
+    public ResponseEntity<List<ResumoClienteResponse>> listarCliente(){
         return ResponseEntity.ok(this.clienteService.listarCliente());
     };
 
     @GetMapping(path = "/listar-inativo")
-    public ResponseEntity<List<ClienteResponse>> listarClienteInativo(){
+    public ResponseEntity<List<ResumoClienteResponse>> listarClienteInativo(){
         return ResponseEntity.ok(this.clienteService.listarClienteInativo());
+    };
+
+    @GetMapping(path = "/buscar/{id}")
+    public ResponseEntity<ClienteResponse> buscarCliente(@PathVariable Long id){
+        return ResponseEntity.ok(this.clienteService.buscarCliente(id));
     };
 
     @PostMapping(path = "/cadastrar")

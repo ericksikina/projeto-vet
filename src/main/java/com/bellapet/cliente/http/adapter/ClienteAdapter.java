@@ -5,6 +5,7 @@ import com.bellapet.carrinho.persistence.entity.Carrinho;
 import com.bellapet.cliente.http.request.AtualizarClienteRequest;
 import com.bellapet.cliente.http.request.CadastroClienteRequest;
 import com.bellapet.cliente.http.response.ClienteResponse;
+import com.bellapet.cliente.http.response.ResumoClienteResponse;
 import com.bellapet.cliente.persistence.entity.Cliente;
 import com.bellapet.endereco.http.adapter.EnderecoAdapter;
 import com.bellapet.endereco.persistence.entity.Endereco;
@@ -19,9 +20,14 @@ public class ClienteAdapter {
                 cliente.getEmail(), EnderecoAdapter.toResponse(cliente.getEndereco()), cliente.getStatus());
     }
 
-    public static List<ClienteResponse> toResponseList(List<Cliente> listaCliente) {
+    public static ResumoClienteResponse toResumoResponse(Cliente cliente) {
+        return new ResumoClienteResponse(cliente.getId(), cliente.getNome(), cliente.getCpf(), cliente.getTelefone(),
+                cliente.getEmail(), cliente.getStatus());
+    }
+
+    public static List<ResumoClienteResponse> toResumoResponseList(List<Cliente> listaCliente) {
         return listaCliente.stream()
-                .map(ClienteAdapter::toResponse)
+                .map(ClienteAdapter::toResumoResponse)
                 .collect(Collectors.toList());
     }
 

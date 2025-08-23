@@ -10,6 +10,7 @@ import com.bellapet.cliente.http.request.CadastroClienteRequest;
 import com.bellapet.cliente.http.request.EmailRecuperacaoRequest;
 import com.bellapet.cliente.http.response.ClienteResponse;
 import com.bellapet.cliente.http.response.EsqueciMinhaSenhaResponse;
+import com.bellapet.cliente.http.response.ResumoClienteResponse;
 import com.bellapet.cliente.persistence.entity.Cliente;
 import com.bellapet.cliente.persistence.repository.ClienteRepository;
 import com.bellapet.endereco.http.adapter.EnderecoAdapter;
@@ -18,6 +19,7 @@ import com.bellapet.cliente.http.request.EsqueciMinhaSenhaRequest;
 import com.bellapet.utils.enums.Status;
 import com.bellapet.utils.enums.UserRole;
 import com.bellapet.utils.service.EmailService;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
@@ -37,13 +39,17 @@ public class ClienteService {
     private final AuthRepository authRepository;
     private final EmailService emailService;
 
-    public List<ClienteResponse> listarCliente() {
-        return ClienteAdapter.toResponseList(this.clienteRepository.findALlByStatus(Status.ATIVO));
+    public List<ResumoClienteResponse> listarCliente() {
+        return ClienteAdapter.toResumoResponseList(this.clienteRepository.findALlByStatus(Status.ATIVO));
     }
 
-    public List<ClienteResponse> listarClienteInativo() {
-        return ClienteAdapter.toResponseList(this.clienteRepository.findALlByStatus(Status.INATIVO));
+    public List<ResumoClienteResponse> listarClienteInativo() {
+        return ClienteAdapter.toResumoResponseList(this.clienteRepository.findALlByStatus(Status.INATIVO));
     }
+
+    public ClienteResponse buscarCliente(Long id){
+        return ClienteAdapter.toResponse(this.buscarClientePorId(id));
+    };
 
     @Transactional
     public void cadastrarCliente(CadastroClienteRequest cadastroClienteRequest) {
@@ -114,5 +120,10 @@ public class ClienteService {
         Optional<Cliente> optionalCliente = this.clienteRepository.findByCpf(cpf);
         if(optionalCliente.isPresent())
             throw new IllegalArgumentException("Cpf já cadastrado!");
+    }
+
+    private Cliente buscarClientePorId(Long id){
+        return this.clienteRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Cliente não encontrado!"));
     }
 }
