@@ -19,8 +19,13 @@ public class HorarioController {
     private final HorarioService horarioService;
 
     @GetMapping(path = "/listar")
-    public ResponseEntity<List<HorarioResponse>> listarHorarios() {
+    public ResponseEntity<List<HorarioResponse>> listarHorario() {
         return ResponseEntity.ok(this.horarioService.listarHorario());
+    }
+
+    @GetMapping(path = "/listar-inativo")
+    public ResponseEntity<List<HorarioResponse>> listarHorarioInativo() {
+        return ResponseEntity.ok(this.horarioService.listarHorarioInativo());
     }
 
     @PostMapping(path = "/cadastrar")

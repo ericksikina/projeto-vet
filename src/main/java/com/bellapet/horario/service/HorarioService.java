@@ -19,7 +19,11 @@ public class HorarioService {
     private final HorarioRepository horarioRepository;
 
     public List<HorarioResponse> listarHorario() {
-        return HorarioAdapter.toResponseList(this.horarioRepository.findAll());
+        return HorarioAdapter.toResponseList(this.horarioRepository.findAllByStatus(Status.ATIVO));
+    }
+
+    public List<HorarioResponse> listarHorarioInativo() {
+        return HorarioAdapter.toResponseList(this.horarioRepository.findAllByStatus(Status.INATIVO));
     }
 
     @Transactional
