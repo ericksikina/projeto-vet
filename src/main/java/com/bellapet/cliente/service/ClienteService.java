@@ -14,7 +14,6 @@ import com.bellapet.cliente.persistence.entity.Cliente;
 import com.bellapet.cliente.persistence.repository.ClienteRepository;
 import com.bellapet.endereco.http.adapter.EnderecoAdapter;
 import com.bellapet.endereco.persistence.entity.Endereco;
-import com.bellapet.endereco.service.EnderecoService;
 import com.bellapet.cliente.http.request.EsqueciMinhaSenhaRequest;
 import com.bellapet.utils.enums.Status;
 import com.bellapet.utils.enums.UserRole;
@@ -39,7 +38,11 @@ public class ClienteService {
     private final EmailService emailService;
 
     public List<ClienteResponse> listarCliente() {
-        return ClienteAdapter.toResponseList(this.clienteRepository.findAll());
+        return ClienteAdapter.toResponseList(this.clienteRepository.findALlByStatus(Status.ATIVO));
+    }
+
+    public List<ClienteResponse> listarClientesInativos() {
+        return ClienteAdapter.toResponseList(this.clienteRepository.findALlByStatus(Status.INATIVO));
     }
 
     @Transactional
