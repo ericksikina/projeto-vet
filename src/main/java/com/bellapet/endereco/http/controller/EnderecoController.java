@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 public class EnderecoController {
     private final EnderecoService enderecoService;
 
-    @PutMapping(path = "/atulizar/{id}")
+    @PutMapping(path = "/atulizar")
     public ResponseEntity<Void>  atualizarEndereco(HttpServletRequest httpServletRequest
             , @RequestBody EnderecoRequest enderecoRequest) {
         this.enderecoService.atualizarEndereco(httpServletRequest, enderecoRequest);

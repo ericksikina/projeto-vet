@@ -18,10 +18,6 @@ public class EnderecoService {
     private final EnderecoRespository enderecoRespository;
     private final ClienteService clienteService;
 
-    public Endereco cadastrarEndereco(EnderecoRequest enderecoRequest) {
-        return this.enderecoRespository.save(EnderecoAdapter.toEndereco(new Endereco(), enderecoRequest));
-    }
-
     @Transactional
     public void atualizarEndereco(HttpServletRequest httpServletRequest, EnderecoRequest enderecoRequest) {
         Cliente cLiente = this.clienteService.buscarPorAuth(httpServletRequest);

@@ -33,14 +33,16 @@ public class AnimalController {
 
     @PutMapping(path = "/atualizar/{id}")
     public ResponseEntity<Void> atualizarAnimal(@PathVariable Long id,
-                                                @RequestBody AnimalRequest animalRequest) {
-        this.animalService.atualizarAnimal(id, animalRequest);
+                                                @RequestBody AnimalRequest animalRequest,
+                                                HttpServletRequest httpServletRequest) {
+        this.animalService.atualizarAnimal(id, animalRequest, httpServletRequest);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     };
 
     @PutMapping(path = "/atualizar-status/{id}")
-    public ResponseEntity<Void> atualizarStatusAnimal(@PathVariable Long id) {
-        this.animalService.atualizarStatusAnimal(id);
+    public ResponseEntity<Void> atualizarStatusAnimal(@PathVariable Long id,
+                                                      HttpServletRequest httpServletRequest) {
+        this.animalService.atualizarStatusAnimal(id, httpServletRequest);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     };
 }

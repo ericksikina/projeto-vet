@@ -12,6 +12,7 @@ import com.bellapet.cliente.http.response.ClienteResponse;
 import com.bellapet.cliente.http.response.EsqueciMinhaSenhaResponse;
 import com.bellapet.cliente.persistence.entity.Cliente;
 import com.bellapet.cliente.persistence.repository.ClienteRepository;
+import com.bellapet.endereco.http.adapter.EnderecoAdapter;
 import com.bellapet.endereco.persistence.entity.Endereco;
 import com.bellapet.endereco.service.EnderecoService;
 import com.bellapet.cliente.http.request.EsqueciMinhaSenhaRequest;
@@ -33,7 +34,6 @@ import java.util.Random;
 public class ClienteService {
     private final ClienteRepository clienteRepository;
     private final AuthService authService;
-    private final EnderecoService enderecoService;
     private final TokenService tokenService;
     private final AuthRepository authRepository;
     private final EmailService emailService;
@@ -47,7 +47,7 @@ public class ClienteService {
         this.cpfJaCadastrado(cadastroClienteRequest.cpf());
 
         Auth auth = this.authService.cadastro(cadastroClienteRequest.authRequest(), UserRole.USER);
-        Endereco endereco = this.enderecoService.cadastrarEndereco(cadastroClienteRequest.enderecoRequest());
+        Endereco endereco = EnderecoAdapter.toEndereco(new Endereco(), cadastroClienteRequest.enderecoRequest());
         this.clienteRepository.save(ClienteAdapter.toCliente(new Cliente(), cadastroClienteRequest, endereco, auth));
     }
 
