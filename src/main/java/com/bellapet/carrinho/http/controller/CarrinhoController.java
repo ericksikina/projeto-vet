@@ -2,13 +2,17 @@ package com.bellapet.carrinho.http.controller;
 
 import com.bellapet.carrinho.http.request.ProdutoCarrinhoRequest;
 import com.bellapet.carrinho.http.response.CarrinhoResponse;
+import com.bellapet.carrinho.http.response.DisponibilidadeDoCarrinhoResponse;
 import com.bellapet.carrinho.service.CarrinhoService;
+import com.bellapet.produto.persistence.entity.Produto;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @AllArgsConstructor
@@ -39,4 +43,10 @@ public class CarrinhoController {
         this.carrinhoService.esvaziarCarrinho(httpServletRequest);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     };
+
+//    @GetMapping(path = "verificar-disponibilidade-carrinho")
+//    public ResponseEntity<List<DisponibilidadeDoCarrinhoResponse>> verificarDisponibilidadeDoCarrinho(
+//            HttpServletRequest httpServletRequest) {
+//
+//    }
 }
