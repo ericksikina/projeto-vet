@@ -65,6 +65,7 @@ public class PedidoService {
         pedido.setStatusPedido(StatusPedido.CANCELADO);
 
         this.pedidoRepository.save(pedido);
+        this.produtoService.atualizarEstoqueAposCancelamentoPedido(pedido);
 
         String mensagem = "Seu pedido " + pedido.getStatusPedido().getDescricao();
         String assunto = "Atualização do seu pedido - Bellapet";

@@ -1,5 +1,6 @@
 package com.bellapet.produto.service;
 
+import com.bellapet.pedido.persistence.entity.Pedido;
 import com.bellapet.produto.http.adapter.ProdutoAdapter;
 import com.bellapet.produto.http.request.ProdutoRequest;
 import com.bellapet.produto.http.response.ProdutoResponse;
@@ -71,5 +72,13 @@ public class ProdutoService {
     public Produto buscarProdutoPorId(Long id) {
         return this.produtoRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Produto não encontrado!"));
+    }
+
+    public void atualizarEstoqueAposCancelamentoPedido(Pedido pedido) {
+        pedido.getListaDeProdutos()
+                .forEach(produtoPedido -> {
+                    produtoPedido.getProduto().setQtdeEstoque(produtoPedido.getProduto().getQtdeEstoque() + produtoPedido.getQtde());
+                    this.produtoRepository.save(produtoPedido.getProduto());
+                });
     }
 }
