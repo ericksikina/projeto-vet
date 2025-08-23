@@ -28,6 +28,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @AllArgsConstructor
@@ -59,7 +60,7 @@ public class PedidoService {
     }
 
     @Transactional
-    public void cancelarPedido(Long idPedido) {
+    public void cancelarPedido(Long idPedido, HttpServletRequest httpServletRequest) {
         Pedido pedido = this.buscarPedidoPorId(idPedido);
         this.podeSerCancelado(pedido.getStatusPedido());
         pedido.setStatusPedido(StatusPedido.CANCELADO);
@@ -128,5 +129,12 @@ public class PedidoService {
     private void verificarEstoqueDisponivel(Produto produto, int qtde) {
         if(produto.getQtdeEstoque() < qtde)
             throw new IllegalArgumentException(produto.getNome() + " só tem " + qtde + " unidades em estoque!");
+    }
+
+    private void pedidoPertenceAoCliente(HttpServletRequest httpServletRequest, Pedido pedido) {
+        Cliente cliente = this.clienteService.buscarPorAuth(httpServletRequest);
+        if(!Objects.equals(cliente, pedido.getCliente())){
+            throw new IllegalArgumentException("Não é possível cancelar um pedido que não pertence a você!");
+        }
     }
 }

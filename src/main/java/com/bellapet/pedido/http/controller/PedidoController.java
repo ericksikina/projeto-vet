@@ -39,8 +39,8 @@ public class PedidoController {
     }
 
     @PostMapping(path = "/cancelar-pedido/{id}")
-    public ResponseEntity<Void> cancelarPedido(@PathVariable Long id) {
-        this.pedidoService.cancelarPedido(id);
+    public ResponseEntity<Void> cancelarPedido(@PathVariable Long id, HttpServletRequest httpServletRequest) {
+        this.pedidoService.cancelarPedido(id, httpServletRequest);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
