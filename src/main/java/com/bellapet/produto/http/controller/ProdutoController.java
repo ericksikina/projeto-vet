@@ -3,15 +3,11 @@ package com.bellapet.produto.http.controller;
 import com.bellapet.produto.http.request.ProdutoRequest;
 import com.bellapet.produto.http.response.ProdutoResponse;
 import com.bellapet.produto.service.ProdutoService;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
@@ -26,6 +22,16 @@ public class ProdutoController {
     @GetMapping(path = "/listar")
     public ResponseEntity<List<ProdutoResponse>> listarProduto(){
         return ResponseEntity.ok(this.produtoService.listarProduto());
+    }
+
+    @GetMapping(path = "/listar-estoque-baixo")
+    public ResponseEntity<List<ProdutoResponse>> listarProdutoComEstoqueBaixo(){
+        return ResponseEntity.ok(this.produtoService.listarProdutoComEstoqueBaixo());
+    }
+
+    @GetMapping(path = "/listar-inativos")
+    public ResponseEntity<List<ProdutoResponse>> listarProdutoInativos(){
+        return ResponseEntity.ok(this.produtoService.listarProdutoInativos());
     }
 
     @PostMapping(path = "/cadastrar")

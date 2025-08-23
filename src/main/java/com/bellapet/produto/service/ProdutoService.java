@@ -12,7 +12,6 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
@@ -24,7 +23,15 @@ public class ProdutoService {
     private final TipoProdutoService tipoProdutoService;
 
     public List<ProdutoResponse> listarProduto() {
-        return ProdutoAdapter.toResponseList(this.produtoRepository.findAll());
+        return ProdutoAdapter.toResponseList(this.produtoRepository.findAllByStatus(Status.ATIVO));
+    }
+
+    public List<ProdutoResponse> listarProdutoInativos() {
+        return ProdutoAdapter.toResponseList(this.produtoRepository.findAllByStatus(Status.INATIVO));
+    }
+
+    public List<ProdutoResponse> listarProdutoComEstoqueBaixo() {
+        return ProdutoAdapter.toResponseList(this.produtoRepository.findProdutosComEstoqueAbaixoDoMinimo());
     }
 
     @Transactional
