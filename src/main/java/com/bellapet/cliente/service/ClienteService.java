@@ -41,7 +41,7 @@ public class ClienteService {
         return ClienteAdapter.toResponseList(this.clienteRepository.findALlByStatus(Status.ATIVO));
     }
 
-    public List<ClienteResponse> listarClientesInativos() {
+    public List<ClienteResponse> listarClienteInativo() {
         return ClienteAdapter.toResponseList(this.clienteRepository.findALlByStatus(Status.INATIVO));
     }
 

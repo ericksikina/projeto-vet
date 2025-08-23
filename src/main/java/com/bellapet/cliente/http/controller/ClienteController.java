@@ -28,9 +28,9 @@ public class ClienteController {
         return ResponseEntity.ok(this.clienteService.listarCliente());
     };
 
-    @GetMapping(path = "/listar-inativos")
-    public ResponseEntity<List<ClienteResponse>> listarClientesInativos(){
-        return ResponseEntity.ok(this.clienteService.listarClientesInativos());
+    @GetMapping(path = "/listar-inativo")
+    public ResponseEntity<List<ClienteResponse>> listarClienteInativo(){
+        return ResponseEntity.ok(this.clienteService.listarClienteInativo());
     };
 
     @PostMapping(path = "/cadastrar")
