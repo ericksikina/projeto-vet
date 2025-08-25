@@ -34,6 +34,11 @@ public class ProdutoController {
         return ResponseEntity.ok(this.produtoService.listarProdutoInativos());
     }
 
+    @GetMapping(path = "/buscar/{id}")
+    public ResponseEntity<ProdutoResponse> buscarProduto(@PathVariable Long id){
+        return ResponseEntity.ok(this.produtoService.buscarProduto(id));
+    }
+
     @PostMapping(path = "/cadastrar")
     public ResponseEntity<Void> cadastrarProduto(@RequestBody ProdutoRequest produtoRequest) throws IOException {
         produtoService.cadastrarProduto(produtoRequest);

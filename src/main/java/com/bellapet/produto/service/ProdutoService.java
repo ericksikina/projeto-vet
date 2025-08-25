@@ -35,6 +35,10 @@ public class ProdutoService {
         return ProdutoAdapter.toResponseList(this.produtoRepository.findProdutosComEstoqueAbaixoDoMinimo());
     }
 
+    public ProdutoResponse buscarProduto(Long id) {
+        return ProdutoAdapter.toResponse(this.buscarProdutoPorId(id));
+    }
+
     @Transactional
     public void cadastrarProduto(ProdutoRequest produtoRequest) throws IOException {
         TipoProduto tipoProduto = this.tipoProdutoService.buscarTipoProdutoPorId(produtoRequest.idTipoProduto());
