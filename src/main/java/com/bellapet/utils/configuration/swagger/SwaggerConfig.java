@@ -40,7 +40,8 @@ public class SwaggerConfig {
                         new Tag().name("Endereço").description("Gerencia endpoints relacionados ao endereço"),
                         new Tag().name("Cliente").description("Gerencia endpoints relacionados ao cliente"),
                         new Tag().name("Carrinho").description("Gerencia endpoints relacionados ao carrinho"),
-                        new Tag().name("Authorization").description("Gerencia endpoints relacionados ao authorization")
+                        new Tag().name("Authorization").description("Gerencia endpoints relacionados ao authorization"),
+                        new Tag().name("@AllArgsConstructor").description("Gerencia endpoints relacionados ao agendamento")
                 ));
     }
 
