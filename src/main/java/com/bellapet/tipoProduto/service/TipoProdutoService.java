@@ -26,6 +26,10 @@ public class TipoProdutoService {
         return TipoProdutoAdapter.toResponseList(this.tipoProdutoRepository.findAllByStatus(Status.INATIVO));
     }
 
+    public TipoProdutoResponse buscarTipoProduto(Long id) {
+        return TipoProdutoAdapter.toResponse(this.buscarTipoProdutoPorId(id));
+    }
+
     @Transactional
     public void cadastrarTipoProduto(TipoProdutoRequest tipoProdutoRequest) {
         this.tipoProdutoRepository.save(TipoProdutoAdapter.toTipoProduto(new TipoProduto(), tipoProdutoRequest));

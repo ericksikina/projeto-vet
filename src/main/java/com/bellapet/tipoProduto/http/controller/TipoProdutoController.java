@@ -28,6 +28,11 @@ public class TipoProdutoController {
         return ResponseEntity.ok(this.tipoProdutoService.listarTipoProdutoInativo());
     }
 
+    @GetMapping(path = "/buscar/{id}")
+    public ResponseEntity<TipoProdutoResponse> buscarTipoProduto(@PathVariable Long id){
+        return ResponseEntity.ok(this.tipoProdutoService.buscarTipoProduto(id));
+    }
+
     @PostMapping(path = "/cadastrar")
     public ResponseEntity<Void> cadastrarTipoProduto(@RequestBody TipoProdutoRequest tipoProdutoRequest){
         this.tipoProdutoService.cadastrarTipoProduto(tipoProdutoRequest);
