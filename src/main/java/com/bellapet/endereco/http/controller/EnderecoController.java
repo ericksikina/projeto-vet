@@ -1,6 +1,7 @@
 package com.bellapet.endereco.http.controller;
 
 import com.bellapet.endereco.http.request.EnderecoRequest;
+import com.bellapet.endereco.http.response.EnderecoResponse;
 import com.bellapet.endereco.service.EnderecoService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
@@ -15,6 +16,11 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping(path = "/endereco")
 public class EnderecoController {
     private final EnderecoService enderecoService;
+
+    @GetMapping(path = "/buscar")
+    public ResponseEntity<EnderecoResponse> buscarEndereco(HttpServletRequest httpServletRequest) {
+        return ResponseEntity.ok(this.enderecoService.buscarEndereco(httpServletRequest));
+    }
 
     @PutMapping(path = "/atulizar")
     public ResponseEntity<Void>  atualizarEndereco(HttpServletRequest httpServletRequest

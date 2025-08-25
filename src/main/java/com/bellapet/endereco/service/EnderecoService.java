@@ -4,6 +4,7 @@ import com.bellapet.cliente.persistence.entity.Cliente;
 import com.bellapet.cliente.service.ClienteService;
 import com.bellapet.endereco.http.adapter.EnderecoAdapter;
 import com.bellapet.endereco.http.request.EnderecoRequest;
+import com.bellapet.endereco.http.response.EnderecoResponse;
 import com.bellapet.endereco.persistence.entity.Endereco;
 import com.bellapet.endereco.persistence.repository.EnderecoRespository;
 import jakarta.persistence.EntityNotFoundException;
@@ -17,6 +18,11 @@ import org.springframework.stereotype.Service;
 public class EnderecoService {
     private final EnderecoRespository enderecoRespository;
     private final ClienteService clienteService;
+
+    public EnderecoResponse buscarEndereco(HttpServletRequest httpServletRequest) {
+        Cliente cliente = this.clienteService.buscarPorAuth(httpServletRequest);
+        return EnderecoAdapter.toResponse(cliente.getEndereco());
+    }
 
     @Transactional
     public void atualizarEndereco(HttpServletRequest httpServletRequest, EnderecoRequest enderecoRequest) {
