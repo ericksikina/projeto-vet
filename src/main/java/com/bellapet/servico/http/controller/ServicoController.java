@@ -28,6 +28,11 @@ public class ServicoController {
         return ResponseEntity.ok(this.servicoService.listarServicoInativo());
     }
 
+    @GetMapping(path = "/buscar/{id}")
+    public ResponseEntity<ServicoResponse> buscarServico(@PathVariable Long id){
+        return ResponseEntity.ok(this.servicoService.buscarServico(id));
+    }
+
     @PostMapping(path = "/cadastrar")
     public ResponseEntity<Void> cadastrarServico(@RequestBody ServicoRequest servicoRequest){
         this.servicoService.cadastrarServico(servicoRequest);

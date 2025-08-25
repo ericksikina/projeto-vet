@@ -26,6 +26,10 @@ public class ServicoService {
         return ServicoAdapter.toResponseList(this.servicoRepository.findAllByStatus(Status.INATIVO));
     }
 
+    public ServicoResponse buscarServico(Long id) {
+        return ServicoAdapter.toResponse(this.buscarServicoPorId(id));
+    }
+
     @Transactional
     public void cadastrarServico(ServicoRequest servicoRequest) {
         this.servicoRepository.save(ServicoAdapter.toServico(new Servico(), servicoRequest));
