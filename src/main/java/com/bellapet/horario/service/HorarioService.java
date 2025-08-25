@@ -26,6 +26,10 @@ public class HorarioService {
         return HorarioAdapter.toResponseList(this.horarioRepository.findAllByStatus(Status.INATIVO));
     }
 
+    public HorarioResponse buscarHorario(Long id) {
+        return HorarioAdapter.toResponse(this.buscarHorarioPorId(id));
+    }
+
     @Transactional
     public void cadastrarHorario(HorarioRequest horarioRequest) {
         this.horarioRepository.save(HorarioAdapter.toHorario(new Horario(), horarioRequest));

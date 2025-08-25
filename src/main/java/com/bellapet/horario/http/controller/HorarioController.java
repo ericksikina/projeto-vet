@@ -28,6 +28,11 @@ public class HorarioController {
         return ResponseEntity.ok(this.horarioService.listarHorarioInativo());
     }
 
+    @GetMapping(path = "/buscar/{id}")
+    public ResponseEntity<HorarioResponse> buscarHorario(@PathVariable Long id) {
+        return ResponseEntity.ok(this.horarioService.buscarHorario(id));
+    }
+
     @PostMapping(path = "/cadastrar")
     public ResponseEntity<Void> cadastrarHorario(@RequestBody HorarioRequest horarioRequest) {
         this.horarioService.cadastrarHorario(horarioRequest);
