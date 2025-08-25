@@ -33,6 +33,11 @@ public class AnimalService {
         return AnimalAdapter.toResponseList(this.animalRepository.findAllByClienteAndStatus(cliente,Status.INATIVO));
     };
 
+    public AnimalResponse buscarAnimal(HttpServletRequest httpServletRequest, Long id) {
+        Cliente cliente = this.clienteService.buscarPorAuth(httpServletRequest);
+        return AnimalAdapter.toResponse(this.buscarAnimalPorId(id, cliente));
+    }
+
     @Transactional
     public void cadastrarAnimal(AnimalRequest animalRequest, HttpServletRequest httpServletRequest){
         Cliente cliente = this.clienteService.buscarPorAuth(httpServletRequest);
@@ -42,29 +47,21 @@ public class AnimalService {
     @Transactional
     public void atualizarAnimal(Long idAnimal, AnimalRequest animalRequest, HttpServletRequest httpServletRequest) {
         Cliente cliente = this.clienteService.buscarPorAuth(httpServletRequest);
-        Animal animal = this.buscarAnimalPorId(idAnimal);
-        this.animalPertenceAoCliente(animal, cliente);
+        Animal animal = this.buscarAnimalPorId(idAnimal, cliente);
         this.animalRepository.save(AnimalAdapter.toAnimal(animal, animalRequest));
     };
 
     @Transactional
     public void atualizarStatusAnimal(Long idAnimal, HttpServletRequest httpServletRequest) {
         Cliente cliente = this.clienteService.buscarPorAuth(httpServletRequest);
-        Animal animal = this.buscarAnimalPorId(idAnimal);
-        this.animalPertenceAoCliente(animal, cliente);
+        Animal animal = this.buscarAnimalPorId(idAnimal, cliente);
         animal.setStatus(animal.getStatus().equals(Status.ATIVO) ? Status.INATIVO : Status.ATIVO);
 
         this.animalRepository.save(animal);
     };
 
-    private Animal buscarAnimalPorId(Long id) {
-        return this.animalRepository.findById(id)
+    private Animal buscarAnimalPorId(Long id, Cliente cliente) {
+        return this.animalRepository.findByIdAndCliente(id,cliente)
                 .orElseThrow(() -> new EntityNotFoundException("Animal não encontrado!"));
-    }
-
-    private void animalPertenceAoCliente(Animal animal, Cliente cliente) {
-        if(!Objects.equals(animal.getCliente(), cliente)){
-            throw new IllegalArgumentException("O animal + " + animal.getNome() + " não pertence a você!");
-        }
     }
 }
