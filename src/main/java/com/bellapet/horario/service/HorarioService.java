@@ -1,6 +1,9 @@
 package com.bellapet.horario.service;
 
+import com.bellapet.agendamento.persistence.entity.Agendamento;
+import com.bellapet.agendamento.service.AgendamentoService;
 import com.bellapet.horario.http.adapter.HorarioAdapter;
+import com.bellapet.horario.http.request.HorarioDisponivelRequest;
 import com.bellapet.horario.http.request.HorarioRequest;
 import com.bellapet.horario.http.response.HorarioResponse;
 import com.bellapet.horario.persistence.entity.Horario;
@@ -11,23 +14,34 @@ import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalTime;
 import java.util.List;
 
 @Service
 @AllArgsConstructor
 public class HorarioService {
     private final HorarioRepository horarioRepository;
+    private final AgendamentoService agendamentoService;
 
     public List<HorarioResponse> listarHorario() {
-        return HorarioAdapter.toResponseList(this.horarioRepository.findAllByStatus(Status.ATIVO));
+        return HorarioAdapter.toResponseList(this.horarioRepository.findAllByStatusOrderByHorario(Status.ATIVO));
     }
 
     public List<HorarioResponse> listarHorarioInativo() {
-        return HorarioAdapter.toResponseList(this.horarioRepository.findAllByStatus(Status.INATIVO));
+        return HorarioAdapter.toResponseList(this.horarioRepository.findAllByStatusOrderByHorario(Status.INATIVO));
     }
 
     public HorarioResponse buscarHorario(Long id) {
         return HorarioAdapter.toResponse(this.buscarHorarioPorId(id));
+    }
+
+    public List<HorarioResponse> listarHorariosDisponiveis(HorarioDisponivelRequest horarioDisponivelRequest) {
+        List<LocalTime> listaDeHorariosAgendados = this.agendamentoService.listarHorariosAgendados(horarioDisponivelRequest.data());
+
+        if(listaDeHorariosAgendados.isEmpty())
+            return HorarioAdapter.toResponseList(this.horarioRepository.findAllByStatusOrderByHorario(Status.ATIVO));
+
+        return HorarioAdapter.toResponseList(this.horarioRepository.findAllByStatusAndHorarioNotInOrderByHorario(Status.ATIVO,listaDeHorariosAgendados));
     }
 
     @Transactional

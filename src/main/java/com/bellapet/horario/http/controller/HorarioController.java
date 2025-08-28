@@ -1,5 +1,6 @@
 package com.bellapet.horario.http.controller;
 
+import com.bellapet.horario.http.request.HorarioDisponivelRequest;
 import com.bellapet.horario.http.request.HorarioRequest;
 import com.bellapet.horario.http.response.HorarioResponse;
 import com.bellapet.horario.service.HorarioService;
@@ -26,6 +27,12 @@ public class HorarioController {
     @GetMapping(path = "/listar-inativo")
     public ResponseEntity<List<HorarioResponse>> listarHorarioInativo() {
         return ResponseEntity.ok(this.horarioService.listarHorarioInativo());
+    }
+
+    @PostMapping(path = "/listar-disponiveis")
+    public ResponseEntity<List<HorarioResponse>> listarHorariosDisponiveis(
+            @RequestBody HorarioDisponivelRequest horarioDisponivelRequest) {
+        return ResponseEntity.ok(this.horarioService.listarHorariosDisponiveis(horarioDisponivelRequest));
     }
 
     @GetMapping(path = "/buscar/{id}")
