@@ -7,13 +7,14 @@ import com.bellapet.agendamento.persistence.entity.enums.StatusAgendamento;
 import com.bellapet.cliente.http.adapter.ClienteAdapter;
 import com.bellapet.cliente.persistence.entity.Cliente;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class AgendamentoAdapter {
     public static AgendamentoResponse toResponse(Agendamento agendamento) {
-        return  new AgendamentoResponse(agendamento.getId(), agendamento.getDataHora(), agendamento.getStatus(),
-                ClienteAdapter.toResumoResponse(agendamento.getCliente()));
+        return  new AgendamentoResponse(agendamento.getId(), LocalDateTime.of(agendamento.getData(),agendamento.getHora()),
+                agendamento.getStatus(), ClienteAdapter.toResumoResponse(agendamento.getCliente()));
     }
 
     public static List<AgendamentoResponse> toResponseList(List<Agendamento> listaDeAgendamento) {
@@ -23,7 +24,8 @@ public class AgendamentoAdapter {
     }
 
     public static Agendamento toEntity(Agendamento agendamento, AgendamentoRequest agendamentoRequest, Cliente cliente) {
-        agendamento.setDataHora(agendamentoRequest.dataHora());
+        agendamento.setData(agendamentoRequest.data());
+        agendamento.setHora(agendamentoRequest.hora());
         agendamento.setStatus(StatusAgendamento.AGENDADO);
         agendamento.setCliente(cliente);
 
@@ -31,7 +33,8 @@ public class AgendamentoAdapter {
     }
 
     public static Agendamento toEntity(Agendamento agendamento, AgendamentoRequest agendamentoRequest) {
-        agendamento.setDataHora(agendamentoRequest.dataHora());
+        agendamento.setData(agendamentoRequest.data());
+        agendamento.setHora(agendamentoRequest.hora());
         agendamento.setStatus(StatusAgendamento.REMARCADO);
 
         return agendamento;

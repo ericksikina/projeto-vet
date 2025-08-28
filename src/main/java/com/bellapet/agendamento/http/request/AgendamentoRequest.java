@@ -1,6 +1,7 @@
 package com.bellapet.agendamento.http.request;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
-public record AgendamentoRequest(LocalDateTime dataHora) {
+public record AgendamentoRequest(LocalDate data, LocalTime hora) {
 }

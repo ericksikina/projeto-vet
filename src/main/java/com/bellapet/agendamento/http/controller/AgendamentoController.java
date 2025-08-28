@@ -47,7 +47,7 @@ public class AgendamentoController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
-    @PutMapping(path = "/remarcar")
+    @PutMapping(path = "/remarcar/{id}")
     public ResponseEntity<Void> remarcarAgendamento(HttpServletRequest httpServletRequest,
                                                     @RequestBody AgendamentoRequest agendamentoRequest,
                                                     @PathVariable Long id) {
@@ -55,7 +55,7 @@ public class AgendamentoController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
-    @PutMapping(path = "/cancelar")
+    @PutMapping(path = "/cancelar/{id}")
     public ResponseEntity<Void> cancelarAgendamento(HttpServletRequest httpServletRequest,
                                                     @PathVariable Long id) {
         this.agendamentoService.cancelarAgendamento(httpServletRequest, id);

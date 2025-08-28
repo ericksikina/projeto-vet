@@ -8,6 +8,7 @@ import com.bellapet.agendamento.persistence.entity.enums.StatusAgendamento;
 import com.bellapet.agendamento.persistence.repository.AgendamentoRepository;
 import com.bellapet.cliente.persistence.entity.Cliente;
 import com.bellapet.cliente.service.ClienteService;
+import com.bellapet.horario.persistence.entity.Horario;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
@@ -15,8 +16,11 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -80,10 +84,21 @@ public class AgendamentoService {
     }
 
     private void podeSerCancelado(Agendamento agendamento) {
-        Duration diferenca = Duration.between(agendamento.getDataHora(), LocalDateTime.now());
+        LocalDateTime dataHora = LocalDateTime.of(agendamento.getData(),agendamento.getHora());
+        Duration diferenca = Duration.between(LocalDateTime.now(), dataHora);
+
+        if (dataHora.isBefore(LocalDateTime.now()))
+            throw new IllegalArgumentException("Não é possível cancelar um agendamento anterior a data atual!");
 
         if (diferenca.toHours() < 12) {
             throw new IllegalArgumentException("O agendamento deve ser cancelado com pelo menos 12 horas de antecedência!");
         }
+    }
+
+    public List<LocalTime> listarHorariosAgendados(LocalDate data) {
+        List<Agendamento> listaDeAgendamento = this.agendamentoRepository.findAllByData(data);
+        return listaDeAgendamento.stream()
+                .map(Agendamento::getHora)
+                .collect(Collectors.toList());
     }
 }

@@ -5,7 +5,8 @@ import com.bellapet.cliente.persistence.entity.Cliente;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 @Getter
 @Setter
@@ -18,8 +19,8 @@ public class Agendamento {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name = "data_hora")
-    private LocalDateTime dataHora;
+    private LocalDate data;
+    private LocalTime hora;
     private StatusAgendamento status;
     @ManyToOne
     @JoinColumn(name = "id_cliente")
