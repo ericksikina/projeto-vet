@@ -2,12 +2,15 @@ package com.bellapet.produto.http.controller;
 
 import com.bellapet.produto.http.request.ProdutoRequest;
 import com.bellapet.produto.http.response.ProdutoResponse;
+import com.bellapet.produto.persistence.entity.Produto;
 import com.bellapet.produto.service.ProdutoService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
@@ -39,18 +42,26 @@ public class ProdutoController {
         return ResponseEntity.ok(this.produtoService.buscarProduto(id));
     }
 
-    @PostMapping(path = "/cadastrar")
-    public ResponseEntity<Void> cadastrarProduto(@RequestBody ProdutoRequest produtoRequest) throws IOException {
-        produtoService.cadastrarProduto(produtoRequest);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+    @GetMapping("buscar-imagem/{id}")
+    public ResponseEntity<byte[]> buscarImagemProduto(@PathVariable Long id) {
+        Produto produto = this.produtoService.buscarProdutoPorId(id);
+
+        return new ResponseEntity<>(produto.getFoto(), this.produtoService.buscarHttpHeaders(produto.getFoto()), HttpStatus.OK);
     }
 
-//    @PostMapping(path = "/cadastrar", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-//    public ResponseEntity<Void> cadastrarProduto(@ModelAttribute ProdutoMultipartRequest request) throws IOException {
-//        ProdutoRequest produtoRequest = objectMapper.readValue(request.getProduto(), ProdutoRequest.class);
-//        produtoService.cadastrarProduto(request.getFile(), produtoRequest);
-//        return ResponseEntity.status(HttpStatus.CREATED).build();
-//    }
+    @PostMapping(path = "/cadastrar")
+    public ResponseEntity<ProdutoResponse> cadastrarProduto(@RequestBody ProdutoRequest produtoRequest) throws IOException {
+        return ResponseEntity.status(HttpStatus.CREATED).body(produtoService.cadastrarProduto(produtoRequest));
+    }
+
+    @PutMapping(value = "/atualizar-foto/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<Void> atualizarFoto(
+            @PathVariable Long id,
+            @RequestParam("foto") MultipartFile foto) throws IOException {
+        this.produtoService.atualizarFoto(id, foto);
+
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
 
     @PutMapping(path = "/atualizar/{id}")
     public ResponseEntity<Void> atualizarProduto(@PathVariable Long id, @RequestBody ProdutoRequest produtoRequest){

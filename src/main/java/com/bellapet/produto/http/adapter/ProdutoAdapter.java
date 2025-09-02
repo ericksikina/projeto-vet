@@ -6,6 +6,7 @@ import com.bellapet.produto.persistence.entity.Produto;
 import com.bellapet.tipoProduto.http.adapter.TipoProdutoAdapter;
 import com.bellapet.tipoProduto.persistence.entity.TipoProduto;
 import com.bellapet.utils.enums.Status;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -13,7 +14,12 @@ import java.util.stream.Collectors;
 public class ProdutoAdapter {
     public static ProdutoResponse toResponse(Produto produto) {
         return new ProdutoResponse(produto.getId(), produto.getNome(), produto.getPreco(), produto.getQtdeEstoque(),
-                produto.getQtdeMinima(), TipoProdutoAdapter.toResponse(produto.getTipoProduto()),produto.getStatus());
+                produto.getQtdeMinima(), TipoProdutoAdapter.toResponse(produto.getTipoProduto()),produto.getStatus(),
+                ServletUriComponentsBuilder
+                        .fromCurrentContextPath()
+                        .path("/produto/buscar-imagem/")
+                        .path(String.valueOf(produto.getId()))
+                        .toUriString());
     }
 
     public static List<ProdutoResponse> toResponseList(List<Produto> listaProduto) {

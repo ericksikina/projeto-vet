@@ -12,9 +12,14 @@ import com.bellapet.utils.enums.Status;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.net.URLConnection;
 import java.util.List;
 
 @Service
@@ -40,19 +45,19 @@ public class ProdutoService {
     }
 
     @Transactional
-    public void cadastrarProduto(ProdutoRequest produtoRequest) throws IOException {
+    public ProdutoResponse cadastrarProduto(ProdutoRequest produtoRequest) throws IOException {
         TipoProduto tipoProduto = this.tipoProdutoService.buscarTipoProdutoPorId(produtoRequest.idTipoProduto());
         Produto produto = ProdutoAdapter.toProduto(new Produto(), produtoRequest, tipoProduto);
 
-        this.produtoRepository.save(produto);
+        return ProdutoAdapter.toResponse(this.produtoRepository.save(produto));
     }
 
-//    @Transactional
-//    public void cadastrarProduto(MultipartFile file, ProdutoRequest produtoRequest) throws IOException {
-//        TipoProduto tipoProduto = this.tipoProdutoService.buscarTipoProdutoPorId(produtoRequest.idTipoProduto());
-//        Produto produto = ProdutoAdapter.toProduto(new Produto(), produtoRequest, tipoProduto);
-//        this.produtoRepository.save(produto);
-//    }
+    @Transactional
+    public void atualizarFoto(Long id, MultipartFile file) throws IOException {
+        Produto produto = this.buscarProdutoPorId(id);
+        produto.setFoto(file.getBytes());
+        this.produtoRepository.save(produto);
+    }
 
     @Transactional
     public void atualizarProduto(Long idProduto, ProdutoRequest produtoRequest) {
@@ -84,5 +89,26 @@ public class ProdutoService {
                     produtoPedido.getProduto().setQtdeEstoque(produtoPedido.getProduto().getQtdeEstoque() + produtoPedido.getQtde());
                     this.produtoRepository.save(produtoPedido.getProduto());
                 });
+    }
+
+    public HttpHeaders buscarHttpHeaders(byte[] imagem) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.parseMediaType(this.detectarContentType(imagem)));
+
+        return headers;
+    }
+
+    private String detectarContentType(byte[] imagem) {
+        String mimeType;
+        try (ByteArrayInputStream bais = new ByteArrayInputStream(imagem)) {
+            mimeType = URLConnection.guessContentTypeFromStream(bais);
+            if (mimeType == null) {
+                mimeType = "application/octet-stream";
+            }
+        } catch (IOException e) {
+            mimeType = "application/octet-stream";
+        }
+
+        return mimeType;
     }
 }

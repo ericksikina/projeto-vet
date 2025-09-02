@@ -19,7 +19,9 @@ public class Produto {
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(name = "nome")
     private String nome;
+    @Column(name = "preco")
     private BigDecimal preco;
     @Column(name = "qtde_estoque")
     private Integer qtdeEstoque;
@@ -28,5 +30,8 @@ public class Produto {
     @ManyToOne
     @JoinColumn(name = "id_tipo", nullable = false)
     private TipoProduto tipoProduto;
+    @Column(name = "status")
     private Status status;
+    @Column(name = "foto")
+    private byte[] foto;
 }
