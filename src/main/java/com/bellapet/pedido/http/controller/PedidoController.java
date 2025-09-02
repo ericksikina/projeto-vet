@@ -21,7 +21,12 @@ import java.util.List;
 public class PedidoController {
     private final PedidoService pedidoService;
 
-    @GetMapping(path = "/listar")
+    @GetMapping(path = "/listar-dashboard")
+    public ResponseEntity<List<ResumoPedidoResponse>> listarPedidos() {
+        return ResponseEntity.ok(this.pedidoService.listarPedidos());
+    }
+
+    @GetMapping(path = "/listar-e-commerce")
     public ResponseEntity<List<ResumoPedidoResponse>> listarPedidos(HttpServletRequest httpServletRequest) {
         return ResponseEntity.ok(this.pedidoService.listarPedidos(httpServletRequest));
     }

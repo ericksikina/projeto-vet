@@ -45,6 +45,10 @@ public class PedidoService {
         return PedidoAdapter.toResumoResponseList(this.pedidoRepository.findAllByCliente(cliente));
     }
 
+    public List<ResumoPedidoResponse> listarPedidos() {
+        return PedidoAdapter.toResumoResponseList(this.pedidoRepository.findAll());
+    }
+
     public PedidoResponse buscarPedido(Long idPedido) {
         return PedidoAdapter.toResponse(this.buscarPedidoPorId(idPedido));
     }
