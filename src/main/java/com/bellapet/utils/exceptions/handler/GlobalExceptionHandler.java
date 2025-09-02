@@ -1,6 +1,7 @@
 package com.bellapet.utils.exceptions.handler;
 
 import com.auth0.jwt.exceptions.JWTCreationException;
+import com.bellapet.utils.exceptions.custom.InvalidRoleException;
 import com.bellapet.utils.exceptions.models.EstruturaErro;
 import com.bellapet.utils.exceptions.models.ValidationError;
 import jakarta.persistence.EntityNotFoundException;
@@ -8,9 +9,12 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+
+import javax.naming.AuthenticationException;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
@@ -77,6 +81,24 @@ public class GlobalExceptionHandler {
         );
 
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(erro);
+    }
+
+    @ExceptionHandler(UsernameNotFoundException.class)
+    public ResponseEntity<EstruturaErro> usernameNotFoundException(UsernameNotFoundException exception, HttpServletRequest request) {
+        EstruturaErro erro = new EstruturaErro(
+                System.currentTimeMillis(),
+                HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                "Usuário não encontrado!",
+                exception.getMessage(),
+                request.getRequestURI()
+        );
+
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(erro);
+    }
+
+    @ExceptionHandler(InvalidRoleException.class)
+    public ResponseEntity<EstruturaErro> InvalidRoleException(InvalidRoleException exception, HttpServletRequest request){
+        return erroPadronizado(HttpStatus.FORBIDDEN, exception.getMessage(), exception, request);
     }
 
     private ResponseEntity<EstruturaErro> erroPadronizado(HttpStatus httpStatus, String mensagemGenericaErro,
