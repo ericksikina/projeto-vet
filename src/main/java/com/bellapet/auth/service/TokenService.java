@@ -23,7 +23,7 @@ public class TokenService {
             return JWT.create()
                     .withIssuer("auth-api")
                     .withSubject(authEntity.getLogin())
-                    .withClaim("userId", authEntity.getId())
+                    .withClaim("auth-id", authEntity.getId())
                     .withExpiresAt(this.genExpirationDate())
                     .sign(algorithm);
         } catch (JWTCreationException exception){
