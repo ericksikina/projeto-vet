@@ -25,6 +25,12 @@ public class ClienteAdapter {
                 cliente.getEmail(), cliente.getStatus());
     }
 
+    public static List<ClienteResponse> toResponseList(List<Cliente> listaCliente) {
+        return listaCliente.stream()
+                .map(ClienteAdapter::toResponse)
+                .collect(Collectors.toList());
+    }
+
     public static List<ResumoClienteResponse> toResumoResponseList(List<Cliente> listaCliente) {
         return listaCliente.stream()
                 .map(ClienteAdapter::toResumoResponse)

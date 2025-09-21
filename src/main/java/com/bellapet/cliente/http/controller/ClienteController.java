@@ -25,12 +25,12 @@ public class ClienteController {
     private final ClienteService clienteService;
 
     @GetMapping(path = "/listar")
-    public ResponseEntity<List<ResumoClienteResponse>> listarCliente(){
+    public ResponseEntity<List<ClienteResponse>> listarCliente(){
         return ResponseEntity.ok(this.clienteService.listarCliente());
     };
 
     @GetMapping(path = "/listar-inativo")
-    public ResponseEntity<List<ResumoClienteResponse>> listarClienteInativo(){
+    public ResponseEntity<List<ClienteResponse>> listarClienteInativo(){
         return ResponseEntity.ok(this.clienteService.listarClienteInativo());
     };
 

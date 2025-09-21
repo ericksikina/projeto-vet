@@ -39,12 +39,12 @@ public class ClienteService {
     private final AuthRepository authRepository;
     private final EmailService emailService;
 
-    public List<ResumoClienteResponse> listarCliente() {
-        return ClienteAdapter.toResumoResponseList(this.clienteRepository.findALlByStatus(Status.ATIVO));
+    public List<ClienteResponse> listarCliente() {
+        return ClienteAdapter.toResponseList(this.clienteRepository.findALlByStatus(Status.ATIVO));
     }
 
-    public List<ResumoClienteResponse> listarClienteInativo() {
-        return ClienteAdapter.toResumoResponseList(this.clienteRepository.findALlByStatus(Status.INATIVO));
+    public List<ClienteResponse> listarClienteInativo() {
+        return ClienteAdapter.toResponseList(this.clienteRepository.findALlByStatus(Status.INATIVO));
     }
 
     public ClienteResponse buscarCliente(Long id){
