@@ -9,6 +9,7 @@ import com.bellapet.cliente.http.adapter.ClienteAdapter;
 import com.bellapet.cliente.persistence.entity.Cliente;
 import com.bellapet.servico.http.adapter.ServicoAdapter;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -16,7 +17,7 @@ import java.util.stream.Collectors;
 public class AgendamentoAdapter {
     public static AgendamentoResponse toResponse(Agendamento agendamento) {
         return  new AgendamentoResponse(agendamento.getId(), LocalDateTime.of(agendamento.getData(),agendamento.getHora()),
-                agendamento.getStatus(), ClienteAdapter.toResumoResponse(agendamento.getCliente()),
+                agendamento.getStatus(), agendamento.getTotal(), ClienteAdapter.toResumoResponse(agendamento.getCliente()),
                 agendamento.getListaDeServicos().stream()
                         .map(agendamentoServico ->
                                 ServicoAdapter.toResponse(agendamentoServico.getServico()))
@@ -29,11 +30,13 @@ public class AgendamentoAdapter {
                 .collect(Collectors.toList());
     }
 
-    public static Agendamento toEntity(Agendamento agendamento, AgendamentoRequest agendamentoRequest, Cliente cliente) {
+    public static Agendamento toEntity(Agendamento agendamento, AgendamentoRequest agendamentoRequest, Cliente cliente,
+                                       BigDecimal total) {
         agendamento.setData(agendamentoRequest.data());
         agendamento.setHora(agendamentoRequest.hora());
         agendamento.setStatus(StatusAgendamento.AGENDADO);
         agendamento.setCliente(cliente);
+        agendamento.setTotal(total);
 
         return agendamento;
     }

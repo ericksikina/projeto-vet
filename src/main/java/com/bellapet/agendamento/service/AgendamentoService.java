@@ -12,12 +12,15 @@ import com.bellapet.agendamentoServico.persistence.repository.AgendamentoServico
 import com.bellapet.cliente.persistence.entity.Cliente;
 import com.bellapet.cliente.service.ClienteService;
 import com.bellapet.horario.persistence.entity.Horario;
+import com.bellapet.produtoCarrinho.persistence.entity.ProdutoCarrinho;
+import com.bellapet.servico.persistence.entity.Servico;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -53,8 +56,8 @@ public class AgendamentoService {
     @Transactional
     public void efetuarAgendamento(HttpServletRequest httpServletRequest, AgendamentoRequest agendamentoRequest) {
         Cliente cliente = this.buscarCliente(httpServletRequest);
-        Agendamento agendamento = this.agendamentoRepository.save(
-                AgendamentoAdapter.toEntity(new Agendamento(), agendamentoRequest, cliente));
+        Agendamento agendamento = this.agendamentoRepository.save(AgendamentoAdapter
+                .toEntity(new Agendamento(), agendamentoRequest, cliente, this.calcularTotal(agendamentoRequest.listaDeServico())));
         agendamentoRequest.listaDeServico().forEach(servico ->
                 this.agendamentoServicoRepository.save(new AgendamentoServico(servico, agendamento)));
     }
@@ -100,6 +103,14 @@ public class AgendamentoService {
         if (diferenca.toHours() < 12) {
             throw new IllegalArgumentException("O agendamento deve ser cancelado com pelo menos 12 horas de antecedência!");
         }
+    }
+
+    private BigDecimal calcularTotal(List<Servico> listaDeServico) {
+        BigDecimal total = BigDecimal.ZERO;
+        for (Servico servico : listaDeServico) {
+            total = total.add(servico.getPreco());
+        }
+        return total;
     }
 
     public List<LocalTime> listarHorariosAgendados(LocalDate data) {
