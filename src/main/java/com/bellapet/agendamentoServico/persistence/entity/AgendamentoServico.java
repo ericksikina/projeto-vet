@@ -22,4 +22,9 @@ public class AgendamentoServico {
     @ManyToOne
     @JoinColumn(name = "id_agendamento")
     private Agendamento agendamento;
+
+    public AgendamentoServico(Servico servico, Agendamento agendamento) {
+        this.servico = servico;
+        this.agendamento = agendamento;
+    }
 }

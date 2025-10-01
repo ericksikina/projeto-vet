@@ -2,10 +2,13 @@ package com.bellapet.agendamento.service;
 
 import com.bellapet.agendamento.http.adapter.AgendamentoAdapter;
 import com.bellapet.agendamento.http.request.AgendamentoRequest;
+import com.bellapet.agendamento.http.request.RemarcarAgendamentRequest;
 import com.bellapet.agendamento.http.response.AgendamentoResponse;
 import com.bellapet.agendamento.persistence.entity.Agendamento;
 import com.bellapet.agendamento.persistence.entity.enums.StatusAgendamento;
 import com.bellapet.agendamento.persistence.repository.AgendamentoRepository;
+import com.bellapet.agendamentoServico.persistence.entity.AgendamentoServico;
+import com.bellapet.agendamentoServico.persistence.repository.AgendamentoServicoRepository;
 import com.bellapet.cliente.persistence.entity.Cliente;
 import com.bellapet.cliente.service.ClienteService;
 import com.bellapet.horario.persistence.entity.Horario;
@@ -27,6 +30,7 @@ import java.util.stream.Collectors;
 public class AgendamentoService {
     private final AgendamentoRepository agendamentoRepository;
     private final ClienteService clienteService;
+    private final AgendamentoServicoRepository agendamentoServicoRepository;
 
     public List<AgendamentoResponse> listarAgendamento(HttpServletRequest httpServletRequest) {
         Cliente cliente = this.buscarCliente(httpServletRequest);
@@ -49,14 +53,17 @@ public class AgendamentoService {
     @Transactional
     public void efetuarAgendamento(HttpServletRequest httpServletRequest, AgendamentoRequest agendamentoRequest) {
         Cliente cliente = this.buscarCliente(httpServletRequest);
-        this.agendamentoRepository.save(AgendamentoAdapter.toEntity(new Agendamento(), agendamentoRequest, cliente));
+        Agendamento agendamento = this.agendamentoRepository.save(
+                AgendamentoAdapter.toEntity(new Agendamento(), agendamentoRequest, cliente));
+        agendamentoRequest.listaDeServico().forEach(servico ->
+                this.agendamentoServicoRepository.save(new AgendamentoServico(servico, agendamento)));
     }
 
     @Transactional
-    public void remarcarAgendamento(HttpServletRequest httpServletRequest, AgendamentoRequest agendamentoRequest, Long id) {
+    public void remarcarAgendamento(HttpServletRequest httpServletRequest, RemarcarAgendamentRequest remarcarAgendamentRequest, Long id) {
         Cliente cliente = this.buscarCliente(httpServletRequest);
         Agendamento agendamento = this.buscarAgendamentoPorIdECliente(id, cliente);
-        this.agendamentoRepository.save(AgendamentoAdapter.toEntity(agendamento, agendamentoRequest));
+        this.agendamentoRepository.save(AgendamentoAdapter.toEntity(agendamento, remarcarAgendamentRequest));
     }
 
     @Transactional

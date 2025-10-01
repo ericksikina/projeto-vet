@@ -1,6 +1,7 @@
 package com.bellapet.agendamento.http.controller;
 
 import com.bellapet.agendamento.http.request.AgendamentoRequest;
+import com.bellapet.agendamento.http.request.RemarcarAgendamentRequest;
 import com.bellapet.agendamento.http.response.AgendamentoResponse;
 import com.bellapet.agendamento.service.AgendamentoService;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -49,9 +50,9 @@ public class AgendamentoController {
 
     @PutMapping(path = "/remarcar/{id}")
     public ResponseEntity<Void> remarcarAgendamento(HttpServletRequest httpServletRequest,
-                                                    @RequestBody AgendamentoRequest agendamentoRequest,
+                                                    @RequestBody RemarcarAgendamentRequest remarcarAgendamentRequest,
                                                     @PathVariable Long id) {
-        this.agendamentoService.remarcarAgendamento(httpServletRequest, agendamentoRequest, id);
+        this.agendamentoService.remarcarAgendamento(httpServletRequest, remarcarAgendamentRequest, id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 

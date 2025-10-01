@@ -43,10 +43,4 @@ public class CarrinhoController {
         this.carrinhoService.esvaziarCarrinho(httpServletRequest);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     };
-
-//    @GetMapping(path = "verificar-disponibilidade-carrinho")
-//    public ResponseEntity<List<DisponibilidadeDoCarrinhoResponse>> verificarDisponibilidadeDoCarrinho(
-//            HttpServletRequest httpServletRequest) {
-//
-//    }
 }
