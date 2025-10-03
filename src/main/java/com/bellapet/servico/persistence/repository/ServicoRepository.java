@@ -10,4 +10,5 @@ import java.util.List;
 @Repository
 public interface ServicoRepository extends JpaRepository<Servico, Long> {
     List<Servico> findAllByStatus(Status status);
+    List<Servico> findAllByIdIn(List<Long> listaDeId);
 }

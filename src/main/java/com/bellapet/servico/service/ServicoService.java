@@ -52,4 +52,8 @@ public class ServicoService {
         return this.servicoRepository.findById(idServico)
                 .orElseThrow(() -> new EntityNotFoundException("Serviço não encontrado!"));
     }
+
+    public List<Servico> buscarListaDeServico(List<Long> listaDeIds) {
+        return this.servicoRepository.findAllByIdIn(listaDeIds);
+    }
 }

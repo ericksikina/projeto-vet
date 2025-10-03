@@ -14,6 +14,7 @@ import com.bellapet.cliente.service.ClienteService;
 import com.bellapet.horario.persistence.entity.Horario;
 import com.bellapet.produtoCarrinho.persistence.entity.ProdutoCarrinho;
 import com.bellapet.servico.persistence.entity.Servico;
+import com.bellapet.servico.service.ServicoService;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
@@ -34,6 +35,7 @@ public class AgendamentoService {
     private final AgendamentoRepository agendamentoRepository;
     private final ClienteService clienteService;
     private final AgendamentoServicoRepository agendamentoServicoRepository;
+    private final ServicoService servicoService;
 
     public List<AgendamentoResponse> listarAgendamento(HttpServletRequest httpServletRequest) {
         Cliente cliente = this.buscarCliente(httpServletRequest);
@@ -56,9 +58,10 @@ public class AgendamentoService {
     @Transactional
     public void efetuarAgendamento(HttpServletRequest httpServletRequest, AgendamentoRequest agendamentoRequest) {
         Cliente cliente = this.buscarCliente(httpServletRequest);
+        List<Servico> listaDeServico = this.servicoService.buscarListaDeServico(agendamentoRequest.listaDeIdServico());
         Agendamento agendamento = this.agendamentoRepository.save(AgendamentoAdapter
-                .toEntity(new Agendamento(), agendamentoRequest, cliente, this.calcularTotal(agendamentoRequest.listaDeServico())));
-        agendamentoRequest.listaDeServico().forEach(servico ->
+                .toEntity(new Agendamento(), agendamentoRequest, cliente, this.calcularTotal(listaDeServico)));
+        listaDeServico.forEach(servico ->
                 this.agendamentoServicoRepository.save(new AgendamentoServico(servico, agendamento)));
     }
 
